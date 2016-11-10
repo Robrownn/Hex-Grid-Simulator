@@ -13,8 +13,7 @@ public class Sensor extends Cell {
     }
 
     public Sensor(int status) {
-        super();
-        this.status = 1;
+        this.status = status;
     }
 
     public Sensor(Cell NW, Cell NE, Cell w, Cell e, Cell SW, Cell SE, int status) {

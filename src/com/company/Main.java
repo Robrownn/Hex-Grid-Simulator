@@ -25,6 +25,8 @@ public class Main {
 
         grid.setGrid(gridArray);
 
+        grid.printGrid();
+
 
     }
 }
