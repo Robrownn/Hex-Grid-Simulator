@@ -29,5 +29,9 @@ public class Sensor extends Cell {
         this.status = status;
     }
 
+    public void setNeighbours(Sensor[] neighbours) {
+
+    }
+
 
 }
