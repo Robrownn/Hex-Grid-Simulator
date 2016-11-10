@@ -5,20 +5,20 @@ package com.company;
  */
 public class Grid {
 
-    Sensor[] sensors;
+    Cell[][] grid;
 
     public Grid() {
-        sensors = null;
+        grid = null;
     }
-    public Grid(Sensor[] sensors) {
-        this.sensors = sensors;
-    }
-
-    public Sensor[] getSensors() {
-        return sensors;
+    public Grid(Cell[][] grid) {
+        this.grid = grid;
     }
 
-    public void setSensors(Sensor[] sensors) {
-        this.sensors = sensors;
+    public Cell[][] getGrid() {
+        return grid;
+    }
+
+    public void setGrid(Cell[][] grid) {
+        this.grid = grid;
     }
 }

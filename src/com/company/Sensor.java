@@ -12,8 +12,13 @@ public class Sensor extends Cell {
         this.status = 1;
     }
 
-    public Sensor(int id, Cell NW, Cell NE, Cell w, Cell e, Cell SW, Cell SE, int status) {
-        super(id, NW, NE, w, e, SW, SE);
+    public Sensor(int status) {
+        super();
+        this.status = 1;
+    }
+
+    public Sensor(Cell NW, Cell NE, Cell w, Cell e, Cell SW, Cell SE, int status) {
+        super(NW, NE, w, e, SW, SE);
         this.status = status;
     }
 
@@ -24,4 +29,6 @@ public class Sensor extends Cell {
     public void setStatus(int status) {
         this.status = status;
     }
+
+
 }

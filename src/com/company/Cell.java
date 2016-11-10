@@ -5,43 +5,32 @@ package com.company;
  */
 public class Cell {
 
-    int id;
-    Cell NW,NE,W,E,SW,SE;
+    Cell N,NE,NW,S,SW,SE;
 
     public Cell() {
-        id = 0;
-        NW = null;
+        N = null;
         NE = null;
-        W = null;
-        E = null;
+        NW = null;
+        S = null;
         SW = null;
         SE = null;
     }
 
-    public Cell(int id, Cell NW, Cell NE, Cell w, Cell e, Cell SW, Cell SE) {
-        this.id = id;
-        this.NW = NW;
+    public Cell(Cell n, Cell NE, Cell NW, Cell s, Cell SW, Cell SE) {
+        N = n;
         this.NE = NE;
-        W = w;
-        E = e;
+        this.NW = NW;
+        S = s;
         this.SW = SW;
         this.SE = SE;
     }
 
-    public int getId() {
-        return id;
+    public Cell getN() {
+        return N;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Cell getNW() {
-        return NW;
-    }
-
-    public void setNW(Cell NW) {
-        this.NW = NW;
+    public void setN(Cell n) {
+        N = n;
     }
 
     public Cell getNE() {
@@ -52,20 +41,20 @@ public class Cell {
         this.NE = NE;
     }
 
-    public Cell getW() {
-        return W;
+    public Cell getNW() {
+        return NW;
     }
 
-    public void setW(Cell w) {
-        W = w;
+    public void setNW(Cell NW) {
+        this.NW = NW;
     }
 
-    public Cell getE() {
-        return E;
+    public Cell getS() {
+        return S;
     }
 
-    public void setE(Cell e) {
-        E = e;
+    public void setS(Cell s) {
+        S = s;
     }
 
     public Cell getSW() {
