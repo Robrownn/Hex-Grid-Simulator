@@ -30,18 +30,47 @@ public class Main {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (gridArray[i][j] instanceof Sensor) {
-                    Sensor NW = (Sensor) gridArray[i - 1][j - 1];
-                    Sensor N  = (Sensor) gridArray[i - 2][j];
-                    Sensor NE = (Sensor) gridArray[i - 1][j + 1];
+                    Sensor NW = null;
+                    if (!(i-1 < 0) && !(j-1 < 0))
+                        NW = (Sensor) gridArray[i - 1][j - 1];
 
-                    Sensor SW = (Sensor) gridArray[i + 1][j - 1];
-                    Sensor S  = (Sensor) gridArray[i + 2][j];
-                    Sensor SE = (Sensor) gridArray[i + 1][j + 1];
+                    Sensor N = null;
+                    if (!(i-2 < 0))
+                        N  = (Sensor) gridArray[i - 2][j];
+
+                    Sensor NE = null;
+                    if (!(i-1 < 0) && !(j+1 > cols))
+                        NE = (Sensor) gridArray[i - 1][j + 1];
+
+                    Sensor SW = null;
+                    if (!(i+1 < rows) && !(j-11 < 0))
+                        SW = (Sensor) gridArray[i + 1][j - 1];
+
+                    Sensor S = null;
+                    if (!(i+2 > rows))
+                        S  = (Sensor) gridArray[i + 2][j];
+
+                    Sensor SE = null;
+                    if (!(i+1 > rows) && !(j+1 > cols))
+                        SE = (Sensor) gridArray[i + 1][j + 1];
 
                     Sensor[] neighbours = {NW, N, NE, SW, S, SE};
                     Sensor sensor = (Sensor)gridArray[i][j];
                     sensor.setNeighbours(neighbours);
                 } else {}
+            }
+        }
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (gridArray[i][j] instanceof Sensor) {
+                    Sensor sensor = (Sensor)gridArray[i][j];
+                    Sensor[] neighbours = sensor.getNeighbours();
+
+                    for (int k = 0; k < neighbours.length; k++) {
+
+                    }
+                }
             }
         }
 

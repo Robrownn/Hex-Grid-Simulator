@@ -30,7 +30,24 @@ public class Sensor extends Cell {
     }
 
     public void setNeighbours(Sensor[] neighbours) {
+        this.setNW(neighbours[0]);
+        this.setN(neighbours[1]);
+        this.setNE(neighbours[2]);
+        this.setSW(neighbours[3]);
+        this.setS(neighbours[4]);
+        this.setSE(neighbours[5]);
+    }
 
+    public Sensor[] getNeighbours() {
+        Sensor NW = (Sensor)this.getNW();
+        Sensor N  = (Sensor)this.getN();
+        Sensor NE = (Sensor)this.getNE();
+        Sensor SW = (Sensor)this.getSW();
+        Sensor S  = (Sensor)this.getS();
+        Sensor SE = (Sensor)this.getSE();
+
+        Sensor[] neighbours = {NW,N,NE,SW,S,SE};
+        return neighbours;
     }
 
 
