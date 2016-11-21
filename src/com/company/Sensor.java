@@ -6,6 +6,9 @@ package com.company;
 public class Sensor extends Cell {
 
     int status;
+    double battery = 0.8;
+    double sleepProbability = 0;
+    boolean isDead = false;
 
     public Sensor() {
         super();
