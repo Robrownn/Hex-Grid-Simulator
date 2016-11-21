@@ -27,6 +27,7 @@ public class Main {
 
         grid.printGrid();
 
+        // This section gathers neighbours for each sensor. If the neighbouring area does not have a sensor there it will be a null entry
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (gridArray[i][j] instanceof Sensor) {
@@ -61,6 +62,7 @@ public class Main {
             }
         }
 
+        // We must count the amount of sensors in the grid to know when the algorithm should stop: when all sensors are dead
         int sensorCount = 0;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -69,14 +71,16 @@ public class Main {
             }
         }
 
+        // We initialize a counter and increment it every time a sensor dies.
         int deadCount = 0;
 
+        // The algorithm stops when all sensors are dead
         while (deadCount < sensorCount) {
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
                     if (gridArray[i][j] instanceof Sensor) {
                         Sensor sensor = (Sensor) gridArray[i][j];
-                        if (!sensor.isDead) {
+                        if (!sensor.isDead) {                               // if the sensor is dead the algorithm does not run
                             Sensor[] neighbours = sensor.getNeighbours();
 
                             int k;
@@ -108,12 +112,14 @@ public class Main {
                             }
 
 
+                            // sleepCrit is the value in which the sensor determines if it should go to sleep or not
                             double sleepCrit = Math.random();
 
+                            // if the sensor is on and its probability exceeds the randomly generated value then it goes to sleep and resets its sleep probability
                             if (sensor.getStatus() == 1 && sensor.sleepProbability > sleepCrit) {
                                 sensor.setStatus(0);
                                 sensor.sleepProbability = 0;
-                            } else if (sensor.getStatus() == 1 && sensor.sleepProbability < sleepCrit)
+                            } else if (sensor.getStatus() == 1 && sensor.sleepProbability < sleepCrit) // otherwise we increment its probability of going to sleep by 0.05.
                                 sensor.sleepProbability += 0.05;
                         }
                     }
