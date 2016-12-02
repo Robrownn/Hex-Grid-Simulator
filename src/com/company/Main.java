@@ -1,6 +1,7 @@
 package com.company;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class Main {
@@ -9,6 +10,12 @@ public class Main {
         Scanner in = new Scanner(new File("grid.txt"));
         int rows = in.nextInt();
         int cols = in.nextInt();
+        int[][] directions = {
+                {-1,-1},{-1,0},{-1,1},
+                {0,-1},{0,0},{0,1},
+                {1,-1},{1,0},{1,1}
+        };
+        PrintWriter writer = new PrintWriter("coverage.txt", "UTF-8");
 
         Cell[][] gridArray = new Cell[rows][cols];
         Grid grid = new Grid();
@@ -73,32 +80,18 @@ public class Main {
 
         // We initialize a counter and increment it every time a sensor dies.
         int deadCount = 0;
+        int totalCoverage = 0;
 
+        int t = 0;
         // The algorithm stops when all sensors are dead
         while (deadCount < sensorCount) {
+            int cellsCovered = 0;
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
                     if (gridArray[i][j] instanceof Sensor) {
                         Sensor sensor = (Sensor) gridArray[i][j];
-                        if (!sensor.isDead) {                               // if the sensor is dead the algorithm does not run
-                            Sensor[] neighbours = sensor.getNeighbours();
-
-                            int k;
-                            for (k = 0; k < neighbours.length; k++) {
-                                Sensor neighbour = neighbours[k];
-                                if (neighbour == null)
-                                    continue;
-
-                                if (neighbour.getStatus() == 1) {
-                                    sensor.setStatus(0);
-                                    break;
-                                }
-                            }
-
-                            if (k < neighbours.length)
-                                break;
-                            else
-                                sensor.setStatus(1);
+                        if (!sensor.isDead && sensor.getStatus() == 1) {                               // if the sensor is dead the algorithm does not run
+                            radiusOne(sensor);
 
                             if (sensor.getStatus() == 1)
                                 sensor.battery -= 0.0165;
@@ -121,15 +114,85 @@ public class Main {
                                 sensor.sleepProbability = 0;
                             } else if (sensor.getStatus() == 1 && sensor.sleepProbability < sleepCrit) // otherwise we increment its probability of going to sleep by 0.05.
                                 sensor.sleepProbability += 0.05;
+
+                            // count cells being covered.
+                            cellsCovered += countSurroundings(directions,gridArray,i,j);
+                            totalCoverage += cellsCovered;
                         }
+                        else if (!sensor.isDead && sensor.getStatus() == 0) {
+                            /* if the sensor turns on : check its neighbours and determine if it should stay on
+                            otherwise: increase wake up probability and continue to next node
+                             */
+
+                            double wakeCrit = Math.random();
+                            if (sensor.wakeProbability > wakeCrit) {
+                                sensor.wakeProbability = 0;
+                                radiusOne(sensor);
+
+                                if (sensor.getStatus() == 1)
+                                    sensor.battery -= 0.0165;
+                                else
+                                    sensor.battery -= 0.00006;
+
+                                if (sensor.battery <= 0) {
+                                    sensor.isDead = true;
+                                    deadCount++;
+                                    sensor.setStatus(0);
+                                }
+                            } else {
+                                sensor.wakeProbability += 0.05;
+                                sensor.battery -= 0.00006;
+                            }
+                        }
+                        t++;
                     }
                 }
             }
+            writer.print(cellsCovered + " ");
+            //print time in ms of this instance
+            writer.print("(" + t + ")\n");
         }
+        writer.println("[" + totalCoverage + "]");
+        writer.println("{" + t + "}");
+
 
         System.out.println("Algorithm says...");
         grid.printGrid();
 
 
     }
+    public static void radiusOne(Sensor sensor) {
+        Sensor[] neighbours = sensor.getNeighbours();
+
+        int k;
+        for (k = 0; k < neighbours.length; k++) {
+            Sensor neighbour = neighbours[k];
+            if (neighbour == null)
+                continue;
+
+            if (neighbour.getStatus() == 1) {
+                sensor.setStatus(0);
+                break;
+            }
+        }
+
+        if (k == neighbours.length)
+            sensor.setStatus(1);
+        else
+            sensor.setStatus(0);
+    }
+
+    static int countSurroundings(int[][] directions, Cell[][] matrix, int x, int y) {
+        int count = 0;
+        for (int[] direction : directions) {
+            int cx = x + direction[0];
+            int cy = y + direction[1];
+            if (cy >= 0 && cy < matrix.length)
+                if (cx >= 0 && cx < matrix[cy].length)
+                    count++;
+        }
+
+        return count;
+    }
+
 }
