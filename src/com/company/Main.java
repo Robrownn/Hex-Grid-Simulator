@@ -1,13 +1,12 @@
 package com.company;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        Scanner in = new Scanner(new File("grid.txt"));
+        Scanner in = new Scanner(new File("grid2.txt"));
         int rows = in.nextInt();
         int cols = in.nextInt();
         int[][] directions = {
@@ -15,7 +14,6 @@ public class Main {
                 {0,-1},{0,0},{0,1},
                 {1,-1},{1,0},{1,1}
         };
-        PrintWriter writer = new PrintWriter("coverage.txt", "UTF-8");
 
         Cell[][] gridArray = new Cell[rows][cols];
         Grid grid = new Grid();
@@ -31,8 +29,6 @@ public class Main {
         }
 
         grid.setGrid(gridArray);
-
-        grid.printGrid();
 
         // This section gathers neighbours for each sensor. If the neighbouring area does not have a sensor there it will be a null entry
         for (int i = 0; i < rows; i++) {
@@ -65,7 +61,7 @@ public class Main {
                     Sensor[] neighbours = {NW, N, NE, SW, S, SE};
                     Sensor sensor = (Sensor)gridArray[i][j];
                     sensor.setNeighbours(neighbours);
-                } else {}
+                }
             }
         }
 
@@ -148,16 +144,16 @@ public class Main {
                     }
                 }
             }
-            writer.print(cellsCovered + " ");
+            //writer.print(cellsCovered + " ");
+            System.out.println(cellsCovered + " ");
             //print time in ms of this instance
-            writer.print("(" + t + ")\n");
+            //writer.print("(" + t + ")\n");
+            System.out.print("(" + t + ")\n");
         }
-        writer.println("[" + totalCoverage + "]");
-        writer.println("{" + t + "}");
-
-
-        System.out.println("Algorithm says...");
-        grid.printGrid();
+        //writer.println("[" + totalCoverage + "]");
+        System.out.println("[" + totalCoverage + "]");
+        System.out.println("{" + t + "}");
+        //writer.println("{" + t + "}");
 
 
     }
@@ -188,7 +184,7 @@ public class Main {
             int cx = x + direction[0];
             int cy = y + direction[1];
             if (cy >= 0 && cy < matrix.length)
-                if (cx >= 0 && cx < matrix[cy].length)
+                if (cx >= 0 && cx < matrix[cy].length && matrix[cy][cx] instanceof Sensor)
                     count++;
         }
 
