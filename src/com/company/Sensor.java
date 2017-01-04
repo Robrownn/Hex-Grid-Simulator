@@ -6,6 +6,7 @@ package com.company;
 public class Sensor extends Cell {
 
     int status;
+    int updateStatus;
     double battery = 0.8;
     double sleepProbability = 0;
     double wakeProbability = 0;
@@ -14,6 +15,7 @@ public class Sensor extends Cell {
     public Sensor() {
         super();
         this.status = 1;
+        this.updateStatus =1;
     }
 
     public Sensor(int status) {
@@ -23,6 +25,7 @@ public class Sensor extends Cell {
     public Sensor(Cell NW, Cell NE, Cell w, Cell e, Cell SW, Cell SE, int status) {
         super(NW, NE, w, e, SW, SE);
         this.status = status;
+        this.updateStatus = 1;
     }
 
     public int getStatus() {
@@ -52,6 +55,13 @@ public class Sensor extends Cell {
 
         Sensor[] neighbours = {NW,N,NE,SW,S,SE};
         return neighbours;
+    }
+
+    public void setUpdateStatus(int status) {
+        this.updateStatus = status;
+    }
+    public void update() {
+        this.status = updateStatus;
     }
 
 
