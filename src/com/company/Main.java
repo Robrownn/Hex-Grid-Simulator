@@ -67,6 +67,7 @@ public class Main {
 
         // We must count the amount of sensors in the grid to know when the algorithm should stop: when all sensors are dead
         int sensorCount = 0;
+        int awakeSensor = 0;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (gridArray[i][j] instanceof Sensor)
@@ -75,6 +76,20 @@ public class Main {
         }
 
         System.out.println(sensorCount); //Test statement to check how many sensors are in the network
+
+        for (int i = 0; i < rows; i++) {
+            for(int j = 0; j < cols; j++) {
+                if (gridArray[i][j] instanceof Sensor) {
+                    Sensor sensor = (Sensor)gridArray[i][j];
+                    if (sensor.getStatus() == 1)
+                        awakeSensor++;
+                }
+            }
+        }
+
+        System.out.println(awakeSensor);
+
+
 
 
         // We initialize a counter and increment it every time a sensor dies.
@@ -112,7 +127,7 @@ public class Main {
                                     sensor.setUpdateStatus(0);
                                     sensor.sleepProbability = 0;
                                 }
-                                else if (forceSleep <= 0.1 && awakeCount >= 1) {
+                                else if (forceSleep <= 0.2 && awakeCount >= 1) {
                                     sensor.setUpdateStatus(0);
                                     sensor.sleepProbability = 0;
                                 }
@@ -124,15 +139,15 @@ public class Main {
                                 sensor.battery -= 0.00006;
 
                             // count cells being covered.
-                            cellsCovered += countSurroundings(directions,gridArray,i,j);
-                            totalCoverage += cellsCovered;
+                            //cellsCovered += countSurroundings(directions,gridArray,i,j);
+                            //totalCoverage += cellsCovered;
                         }
                         else if (!sensor.isDead && sensor.getStatus() == 0) {
                             int awakeCount = countAwakeNeighbours(sensor);
                             double forceWake = Math.random();
 
 
-                            if (forceWake <= 0.1 && awakeCount < 1) {
+                            if (forceWake <= 0.2 && awakeCount < 1) {
                                 sensor.setUpdateStatus(1);
 
                                 sensor.battery -= 0.00006;
@@ -150,16 +165,42 @@ public class Main {
             }
             update(rows,cols,gridArray); // Update the status of each sensor
             t++;
+            int coverage = 0;
+            for (int m = 0; m < rows; m++) {
+                for (int n = 0; n < cols; n++) {
+                    if(gridArray[m][n] instanceof Sensor) {
 
-            System.out.println(cellsCovered + " ");
+                        Sensor sensor = (Sensor)gridArray[m][n];
+
+                        if (sensor.getStatus() == 1 || countAwakeNeighbours(sensor) >= 1)
+                            coverage++;
+                    }
+
+                }
+            }
+
+            System.out.println(coverage + " ");
             //System.out.print("(" + t + ")\n");
+
+            awakeSensor = 0;
+            for (int k = 0; k < rows; k++) {
+                for(int l = 0; l < cols; l++) {
+                    if (gridArray[k][l] instanceof Sensor) {
+                        Sensor sensor = (Sensor)gridArray[k][l];
+                        if (sensor.getStatus() == 1)
+                            awakeSensor++;
+                    }
+                }
+            }
+
+            //System.out.println(awakeSensor);
         }
         System.out.println("[" + totalCoverage + "]");
         System.out.println("{" + t + "}");
 
 
     }
-    public static void radiusOne(Sensor sensor, int awakeCount) {
+    /*public static void radiusOne(Sensor sensor, int awakeCount) {
         Sensor[] neighbours = sensor.getNeighbours();
 
         int k;
@@ -179,9 +220,9 @@ public class Main {
             sensor.setUpdateStatus(1);
         else
             sensor.setUpdateStatus(0);
-    }
+    }*/
 
-    static int countSurroundings(int[][] directions, Cell[][] matrix, int x, int y) {
+    /*static int countSurroundings(int[][] directions, Cell[][] matrix, int x, int y) {
         int count = 0;
         for (int[] direction : directions) {
             int cx = x + direction[0];
@@ -192,7 +233,7 @@ public class Main {
         }
 
         return count;
-    }
+    }*/
 
     static void update(int rows, int cols, Cell[][] gridArray) {
         for (int i = 0; i < rows; i++) {
