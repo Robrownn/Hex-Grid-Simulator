@@ -172,7 +172,7 @@ public class Main {
 
                         Sensor sensor = (Sensor)gridArray[m][n];
 
-                        if (sensor.getStatus() == 1 || countAwakeNeighbours(sensor) >= 1)
+                        if (sensor.getStatus() == 1 || countAwakeNeighbours(sensor) >= 1 || countAwakeNeighboursHelper(sensor.getNeighbours()))
                             coverage++;
                     }
 
@@ -260,6 +260,26 @@ public class Main {
         }
 
         return awakeCount;
+    }
+
+    /* This is a helper method to facilitate the use of counting a sensors neighbours neighbours.
+       it takes in a sensor array which would be the source sensors list of neighbours,
+       and then iterates through that list of neighbours to count the amount of awake neighbours that that sensor has.
+
+       If the number of awake sensors is greater than 0 then I can return true (because that means at least one sensor is covering the source)
+       otherwise we continue until a neighbour has an awake neighbour.
+       If no neighbours are awake then we return false which means there is no sensor a radius of 2 away covering the source node.
+     */
+    public static boolean countAwakeNeighboursHelper(Sensor[] sensors) {
+
+        for (int i =0; i < sensors.length; i++) {
+            int awakeCount = countAwakeNeighbours(sensors[i]);
+
+            if (awakeCount > 0)
+                return true;
+        }
+
+        return false;
     }
 
 }
