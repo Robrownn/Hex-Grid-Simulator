@@ -32,10 +32,6 @@ public class Sensor extends Cell {
         return status;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
     public void setNeighbours(Sensor[] neighbours) {
         this.setNW(neighbours[0]);
         this.setN(neighbours[1]);

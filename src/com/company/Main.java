@@ -99,7 +99,6 @@ public class Main {
         int t = 0;
         // The algorithm stops when all sensors are dead
         while (deadCount < sensorCount) {
-            int cellsCovered = 0;
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
                     if (gridArray[i][j] instanceof Sensor) {
@@ -107,9 +106,8 @@ public class Main {
                         if (!sensor.isDead && sensor.getStatus() == 1) {
 
                             int awakeCount = countAwakeNeighbours(sensor); // count number of awake neighbours
+                            int awakeRadiusTwo = countAwakeNeighboursHelper(sensor.getNeighbours()); // count number of awake neighbours in a radius of two sensors
 
-
-                            //radiusOne(sensor, awakeCount); // run radius one algorithm
 
                             // sleepCrit is the value in which the sensor determines if it should go to sleep or not
                             double sleepCrit = Math.random();
@@ -117,7 +115,7 @@ public class Main {
 
                             // if the sensor is on and its probability exceeds the randomly generated value then it goes to sleep and resets its sleep probability
                             if (sensor.getStatus() == 1) {
-                                sensor.battery -= 0.0165;
+                                sensor.battery -= 0.027;
                                 if (sensor.battery <= 0) {
                                     sensor.isDead = true;
                                     deadCount++;
@@ -127,7 +125,7 @@ public class Main {
                                     sensor.setUpdateStatus(0);
                                     sensor.sleepProbability = 0;
                                 }
-                                else if (forceSleep <= 0.2 && awakeCount >= 1) {
+                                else if (forceSleep <= 0.2 && (awakeRadiusTwo >= 1 || awakeCount >= 1)) {
                                     sensor.setUpdateStatus(0);
                                     sensor.sleepProbability = 0;
                                 }
@@ -136,21 +134,19 @@ public class Main {
                                     sensor.sleepProbability += 0.05;
                             }
                             else
-                                sensor.battery -= 0.00006;
+                                sensor.battery -= 0.00036;
 
-                            // count cells being covered.
-                            //cellsCovered += countSurroundings(directions,gridArray,i,j);
-                            //totalCoverage += cellsCovered;
                         }
                         else if (!sensor.isDead && sensor.getStatus() == 0) {
                             int awakeCount = countAwakeNeighbours(sensor);
+                            int awakeRadiusTwo = countAwakeNeighboursHelper(sensor.getNeighbours());
                             double forceWake = Math.random();
 
 
-                            if (forceWake <= 0.2 && awakeCount < 1) {
+                            if (forceWake <= 0.2 && (awakeRadiusTwo < 1 || awakeCount < 1)) {
                                 sensor.setUpdateStatus(1);
 
-                                sensor.battery -= 0.00006;
+                                sensor.battery -= 0.00036;
 
                                 if (sensor.battery <= 0) {
                                     sensor.isDead = true;
@@ -172,14 +168,14 @@ public class Main {
 
                         Sensor sensor = (Sensor)gridArray[m][n];
 
-                        if (sensor.getStatus() == 1 || countAwakeNeighbours(sensor) >= 1 || countAwakeNeighboursHelper(sensor.getNeighbours()))
+                        if (sensor.getStatus() == 1 || countAwakeNeighbours(sensor) >= 1 || countAwakeNeighboursHelper(sensor.getNeighbours()) >= 1)
                             coverage++;
                     }
 
                 }
             }
 
-            System.out.println(coverage + " ");
+            System.out.print(coverage + " ");
             //System.out.print("(" + t + ")\n");
 
             awakeSensor = 0;
@@ -193,47 +189,13 @@ public class Main {
                 }
             }
 
-            //System.out.println(awakeSensor);
+            System.out.println(awakeSensor);
         }
         System.out.println("[" + totalCoverage + "]");
         System.out.println("{" + t + "}");
 
 
     }
-    /*public static void radiusOne(Sensor sensor, int awakeCount) {
-        Sensor[] neighbours = sensor.getNeighbours();
-
-        int k;
-        for (k = 0; k < neighbours.length; k++) {
-            Sensor neighbour = neighbours[k];
-            if (neighbour == null)
-                continue;
-
-            if (neighbour.getStatus() == 1) {
-                sensor.setStatus(0);
-                awakeCount++;
-                break;
-            }
-        }
-
-        if (awakeCount < 1)
-            sensor.setUpdateStatus(1);
-        else
-            sensor.setUpdateStatus(0);
-    }*/
-
-    /*static int countSurroundings(int[][] directions, Cell[][] matrix, int x, int y) {
-        int count = 0;
-        for (int[] direction : directions) {
-            int cx = x + direction[0];
-            int cy = y + direction[1];
-            if (cy >= 0 && cy < matrix.length)
-                if (cx >= 0 && cx < matrix[cy].length && matrix[cy][cx] instanceof Sensor)
-                    count++;
-        }
-
-        return count;
-    }*/
 
     static void update(int rows, int cols, Cell[][] gridArray) {
         for (int i = 0; i < rows; i++) {
@@ -270,16 +232,21 @@ public class Main {
        otherwise we continue until a neighbour has an awake neighbour.
        If no neighbours are awake then we return false which means there is no sensor a radius of 2 away covering the source node.
      */
-    public static boolean countAwakeNeighboursHelper(Sensor[] sensors) {
+    public static int countAwakeNeighboursHelper(Sensor[] sensors) {
 
+        int awakeCount = 0;
         for (int i =0; i < sensors.length; i++) {
-            int awakeCount = countAwakeNeighbours(sensors[i]);
+
+            if (sensors[i] == null)
+                continue;
+
+            awakeCount = countAwakeNeighbours(sensors[i]);
 
             if (awakeCount > 0)
-                return true;
+                return awakeCount;
         }
 
-        return false;
+        return awakeCount;
     }
 
 }
