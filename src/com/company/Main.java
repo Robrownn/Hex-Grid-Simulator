@@ -121,11 +121,11 @@ public class Main {
                                     deadCount++;
                                     sensor.setUpdateStatus(0);
                                 }
-                                else if (sensor.sleepProbability > sleepCrit) {
+                                /*else if (sensor.sleepProbability > sleepCrit) {
                                     sensor.setUpdateStatus(0);
                                     sensor.sleepProbability = 0;
-                                }
-                                else if (forceSleep <= 0.2 && (awakeRadiusTwo >= 1 || awakeCount >= 1)) {
+                                }*/
+                                else if (forceSleep <= 0.3 && (awakeRadiusTwo >= 1 || awakeCount >= 1)) {
                                     sensor.setUpdateStatus(0);
                                     sensor.sleepProbability = 0;
                                 }
@@ -143,7 +143,7 @@ public class Main {
                             double forceWake = Math.random();
 
 
-                            if (forceWake <= 0.2 && (awakeRadiusTwo < 1 || awakeCount < 1)) {
+                            if (forceWake <= 0.3 && (awakeRadiusTwo < 1 || awakeCount < 1)) {
                                 sensor.setUpdateStatus(1);
 
                                 sensor.battery -= 0.00036;
@@ -175,10 +175,10 @@ public class Main {
                 }
             }
 
-            System.out.print(coverage + " ");
+            System.out.println(coverage + " ");
             //System.out.print("(" + t + ")\n");
 
-            awakeSensor = 0;
+            /*awakeSensor = 0;
             for (int k = 0; k < rows; k++) {
                 for(int l = 0; l < cols; l++) {
                     if (gridArray[k][l] instanceof Sensor) {
@@ -187,9 +187,9 @@ public class Main {
                             awakeSensor++;
                     }
                 }
-            }
+            }*/
 
-            System.out.println(awakeSensor);
+            //System.out.println(awakeSensor);
         }
         System.out.println("[" + totalCoverage + "]");
         System.out.println("{" + t + "}");
